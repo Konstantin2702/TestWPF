@@ -6,10 +6,11 @@
              xmlns:vm="clr-namespace:UI.ViewModels"
              d:DataContext="{d:DesignInstance Type=vm:ParcelViewModel}"
              mc:Ignorable="d" 
+             Loaded="Window_Loaded"
              Name="Parcel">
     <StackPanel Width="400" HorizontalAlignment="Left"  Orientation="Vertical">
         <Label>Номер участка</Label>
-        <TextBox Validation.Error="TextBox_Error">
+        <TextBox Validation.Error="TextBox_Error" x:Name="NumberTextBox">
             <Binding Path="Number" UpdateSourceTrigger="PropertyChanged" 
                      ValidatesOnDataErrors="True" ValidatesOnExceptions="True" NotifyOnValidationError="True">
                 <Binding.ValidationRules>
@@ -19,7 +20,7 @@
         </TextBox>
 
         <Label>Местоположение</Label>
-        <TextBox Validation.Error="TextBox_Error">
+        <TextBox Validation.Error="TextBox_Error" x:Name="LocationTextBox">
             <Binding Path="Location" UpdateSourceTrigger="PropertyChanged" 
                      ValidatesOnDataErrors="True" ValidatesOnExceptions="True" NotifyOnValidationError="True">
                 <Binding.ValidationRules>

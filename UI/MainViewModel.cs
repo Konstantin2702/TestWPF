@@ -2,7 +2,9 @@
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Windows.Controls;
+using UI.Events;
 using UI.Models;
+using UI.ViewModels;
 using UI.Views;
 
 namespace UI
@@ -17,9 +19,14 @@ namespace UI
             AddParcelCommand = new RelayCommand(AddParcelControl);
 
             Errors = new ObservableCollection<ErrorInfo>();
+            FocusEvent = new FocusEvent();
         }
 
         private ControlInfo _currentControl;
+
+        public FocusEvent FocusEvent;
+
+        public string CurrentFocusTextBox { get; set; }
 
         public ObservableCollection<ControlInfo> Controls { get; set; }
 
@@ -52,7 +59,7 @@ namespace UI
         private void AddBuildingControl()
         {
             var view = new BuildingView(this);
-            var newBuilding = new ControlInfo(view.ViewModel.Guid, view);
+            var newBuilding = new ControlInfo(view.ViewModel.Guid, view, nameof(BuildingViewModel));
             Controls.Add(newBuilding);
 
             if (Controls.Count == 1)
@@ -64,7 +71,7 @@ namespace UI
         private void AddParcelControl()
         {
             var view = new ParcelView(this);
-            var newParcel = new ControlInfo(view.ViewModel.Guid, view);
+            var newParcel = new ControlInfo(view.ViewModel.Guid, view, nameof(ParcelViewModel));
             Controls.Add(newParcel);
 
             if (Controls.Count == 1)
@@ -90,6 +97,28 @@ namespace UI
 
                 };
                 Errors.Add(errorInfo);
+            }
+        }
+
+        public void ChangeCurrentControl(Guid modelGuid)
+        {
+            var control = Controls.SingleOrDefault(c => c.Guid == modelGuid);
+
+            if (control != null) 
+            {
+                CurrentControl = control;
+            }
+        }
+
+        public void HandleFocusEvent(Guid guid, string propertyName)
+        {
+            var control = Controls.SingleOrDefault(c => c.Guid == guid);
+
+            if (control != null)
+            {
+                var isWindowUpdated = control.Guid != CurrentControl?.Guid;
+                CurrentControl = control;
+                FocusEvent.Invoke(propertyName, control.ViewModelName, isWindowUpdated);
             }
         }
     }

@@ -1,4 +1,5 @@
-﻿using System.Windows.Controls;
+﻿using System.Windows;
+using System.Windows.Controls;
 using UI.Helpers;
 using UI.ViewModels;
 
@@ -13,13 +14,14 @@ namespace UI.Views
         {
             InitializeComponent();
             DataContext = new BuildingViewModel(mainViewModel);
+            ViewModel.RootViewModel.FocusEvent.SubscribeOnBuilding(FocusHandler);
         }
 
-        public BaseViewModel ViewModel
+        public BuildingViewModel ViewModel
         {
             get
             {
-                return (BaseViewModel)DataContext;
+                return (BuildingViewModel)DataContext;
             }
 
             set
@@ -28,9 +30,48 @@ namespace UI.Views
             }
         }
 
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            switch (ViewModel.RootViewModel.CurrentFocusTextBox)
+            {
+                case nameof(ViewModel.FloorCount):
+                    FloorCountTextBox.Focus();
+                    break;
+                case nameof(ViewModel.Address):
+                    AddressTextBox.Focus();
+                    break;
+            }
+        }
+
         private void TextBox_Error(object sender, ValidationErrorEventArgs e)
         {
             TextBoxHelper.HandleValidation(sender, ViewModel, e);
+        }
+
+        private void FocusHandler(string propertyName, bool isControlUpdate)
+        {
+            switch (propertyName)
+            {
+                case nameof(ViewModel.FloorCount):
+                    ViewModel.RootViewModel.CurrentFocusTextBox = nameof(ViewModel.FloorCount);
+                    break;
+                case nameof(ViewModel.Address):
+                    ViewModel.RootViewModel.CurrentFocusTextBox = nameof(ViewModel.Address);
+                    break;
+            }
+
+            if (!isControlUpdate)
+            {
+                switch (propertyName)
+                {
+                    case nameof(ViewModel.FloorCount):
+                        FloorCountTextBox.Focus();
+                        break;
+                    case nameof(ViewModel.Address):
+                        AddressTextBox.Focus();
+                        break;
+                }
+            }
         }
     }
 }

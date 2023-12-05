@@ -6,10 +6,11 @@
         xmlns:viewmodels="clr-namespace:UI.ViewModels"
         d:DataContext="{d:DesignInstance Type=viewmodels:BuildingViewModel}"
         mc:Ignorable="d"
+        Loaded="Window_Loaded"
         Name="Building">
     <StackPanel Width="400" HorizontalAlignment="Left"  Orientation="Vertical">
         <Label>Количество этажей</Label>
-        <TextBox Validation.Error="TextBox_Error">
+        <TextBox Validation.Error="TextBox_Error" x:Name="FloorCountTextBox">
             <Binding Path="FloorCount" UpdateSourceTrigger="PropertyChanged" 
                      ValidatesOnDataErrors="True" ValidatesOnExceptions="True" NotifyOnValidationError="True">
                 <Binding.ValidationRules>
@@ -19,7 +20,7 @@
         </TextBox>
 
         <Label>Адрес</Label>
-        <TextBox Validation.Error="TextBox_Error">
+        <TextBox Validation.Error="TextBox_Error" x:Name="AddressTextBox">
             <Binding Path="Address" UpdateSourceTrigger="PropertyChanged" 
                      ValidatesOnDataErrors="True" ValidatesOnExceptions="True" NotifyOnValidationError="True">
                 <Binding.ValidationRules>

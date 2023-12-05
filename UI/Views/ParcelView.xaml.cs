@@ -1,4 +1,5 @@
-﻿using System.Windows.Controls;
+﻿using System.Windows;
+using System.Windows.Controls;
 using UI.Helpers;
 using UI.ViewModels;
 
@@ -13,13 +14,14 @@ namespace UI.Views
         {
             InitializeComponent();
             DataContext = new ParcelViewModel(viewModel);
+            ViewModel.RootViewModel.FocusEvent.SubscribeOnParcel(FocusHandler);
         }
 
-        public BaseViewModel ViewModel
+        public ParcelViewModel ViewModel
         {
             get
             {
-                return (BaseViewModel)DataContext;
+                return (ParcelViewModel)DataContext;
             }
 
             set
@@ -31,6 +33,45 @@ namespace UI.Views
         private void TextBox_Error(object sender, ValidationErrorEventArgs e)
         {
             TextBoxHelper.HandleValidation(sender, ViewModel, e);
+        }
+
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            switch (ViewModel.RootViewModel.CurrentFocusTextBox)
+            {
+                case nameof(ViewModel.Location):
+                    LocationTextBox.Focus();
+                    break;
+                case nameof(ViewModel.Number):
+                    NumberTextBox.Focus();
+                    break;
+            }
+        }
+
+        private void FocusHandler(string propertyName, bool isControlUpdated)
+        {
+            switch (propertyName)
+            {
+                case nameof(ViewModel.Location):
+                    ViewModel.RootViewModel.CurrentFocusTextBox = nameof(ViewModel.Location);
+                    break;
+                case nameof(ViewModel.Number):
+                    ViewModel.RootViewModel.CurrentFocusTextBox = nameof(ViewModel.Number);
+                    break;
+            }
+
+            if (!isControlUpdated)
+            {
+                switch (propertyName)
+                {
+                    case nameof(ViewModel.Location):
+                        LocationTextBox.Focus();
+                        break;
+                    case nameof(ViewModel.Number):
+                        NumberTextBox.Focus();
+                        break;
+                }
+            }
         }
     }
 }

@@ -1,12 +1,19 @@
 ﻿using System.ComponentModel;
+using UI.Events;
 
 namespace UI.ViewModels
 {
-    public class BuildingViewModel : BaseViewModel, IDataErrorInfo
+    public class BuildingViewModel : BaseViewModel, IDataErrorInfo, INotifyPropertyChanged
     {
-        public BuildingViewModel(MainViewModel mainViewModel) : base(mainViewModel) {}
+        public BuildingViewModel(MainViewModel mainViewModel) : base(mainViewModel) 
+        {
+        }
+
+        
 
         public int FloorCount { get; set; }
+
+        public bool IsFloorCountFocused { get; set; } = false;
 
         public string Address { get; set; }
 
@@ -38,6 +45,13 @@ namespace UI.ViewModels
 
                 return error;
             }
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        private void OnPropertyChanged(string propertyName)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }
