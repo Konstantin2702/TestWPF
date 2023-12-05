@@ -3,10 +3,67 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:UI"
+        xmlns:ui="clr-namespace:UI"
+        xmlns:models="clr-namespace:UI.Models"
+        d:DataContext="{d:DesignInstance Type=ui:MainViewModel}"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
-    <Grid>
+    <Window.Resources>
+        <DataTemplate x:Key="ChoiceControlItemTemplate" DataType="{x:Type models:ControlInfo}">
+            <StackPanel Orientation="Vertical">
+                <Label Content="{Binding Control.Name}"/>
+                <Label FontWeight="Bold" Content="{Binding Guid}"/>
+            </StackPanel>
+        </DataTemplate>
+        <DataTemplate x:Key="ErrorItemTemplate" DataType="{x:Type models:ErrorInfo}">
+            <StackPanel Orientation="Horizontal">
+                <Label Content="{Binding ModelGuid}" Width="100"/>
+                <Label Content="{Binding PropertyName}" Width="100"/>
+                <Label Content="{Binding ErrorMessage}" Width="200"/>
+            </StackPanel>
+        </DataTemplate>
+    </Window.Resources>
+    <Grid Margin="10 15 0 0">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="2*"/>
+            <ColumnDefinition Width="3*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="2*"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <StackPanel Orientation="Vertical" Grid.Column="0" Grid.RowSpan="2">
+            <StackPanel Orientation="Horizontal" VerticalAlignment="Top">
+                <Button Content="Building" Height="20" Width="60" Margin="0 0 10 0" 
+                        Command="{Binding AddBuildingCommand}"/>
+                <Button Content="Parcel" Height="20" Width="60" Margin="10 0 0 0"
+                        Command="{Binding AddParcelCommand}"/>
+            </StackPanel>
+            <Border BorderBrush="Black" BorderThickness="2" Margin="10 20 10 10">
+                <ListBox Height="340"
+                   BorderThickness="0"
+                   ScrollViewer.VerticalScrollBarVisibility="Auto"
+                   ScrollViewer.HorizontalScrollBarVisibility="Hidden"
+                   ItemsSource="{Binding Controls}"
+                   ItemTemplate="{StaticResource ChoiceControlItemTemplate}"
+                   SelectionMode="Single"
+                   SelectedItem="{Binding CurrentControl}">
+                </ListBox>
+            </Border>
+        </StackPanel>
 
+        <ContentControl Grid.Column="1" Grid.Row="0" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="10 0 10 0" 
+                        Content="{Binding CurrentControl.Control}"></ContentControl>
+
+        <Border BorderBrush="Black" Grid.Column="1" Grid.Row="1" BorderThickness="2" Margin="10 20 10 10">
+            <ListBox Height="100"
+                  BorderThickness="0"
+                  ScrollViewer.VerticalScrollBarVisibility="Auto"
+                  ScrollViewer.HorizontalScrollBarVisibility="Hidden"
+                  ItemsSource="{Binding Errors}"
+                  ItemTemplate="{StaticResource ErrorItemTemplate}"
+                  SelectionMode="Single">
+            </ListBox>
+        </Border>
     </Grid>
 </Window>
