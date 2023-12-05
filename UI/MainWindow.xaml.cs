@@ -41,9 +41,7 @@ namespace UI
 
             var selectedItem = (ErrorInfo)listBox.SelectedItem;
 
-            //ViewModel.ChangeCurrentControl(selectedItem.ModelGuid);
             ViewModel.HandleFocusEvent(selectedItem.ModelGuid, selectedItem.PropertyName);
-
         }
     }
 }

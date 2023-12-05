@@ -100,16 +100,6 @@ namespace UI
             }
         }
 
-        public void ChangeCurrentControl(Guid modelGuid)
-        {
-            var control = Controls.SingleOrDefault(c => c.Guid == modelGuid);
-
-            if (control != null) 
-            {
-                CurrentControl = control;
-            }
-        }
-
         public void HandleFocusEvent(Guid guid, string propertyName)
         {
             var control = Controls.SingleOrDefault(c => c.Guid == guid);
